@@ -1,11 +1,37 @@
-/// @description Core Player Logic
+/// @description Core Player Logic + info bout collision parent!
 // Every step of the game... ; Grundlegende Spielmechanik für den Charakter
 
-// Get player inputs:
+key_left =/* keyboard_check(vk_left) or */ keyboard_check(ord("A"));
+key_right = /*keyboard_check(vk_right) or */ keyboard_check(ord("D"));
+key_jump  = /*keyboard_check_pressed(vk_up) or */ keyboard_check_pressed(vk_space) or keyboard_check_pressed(ord("W"));
+key_down = keyboard_check(ord("S"));
 
-key_left = keyboard_check(vk_left) or keyboard_check(ord("A"));
-key_right = keyboard_check(vk_right) or keyboard_check(ord("D"));
-key_jump = keyboard_check_pressed(vk_space);
+if (key_left) || (key_right) || (key_down) || (key_jump)
+{
+	controller = 0;	
+}
+
+if (abs(gamepad_axis_value(0, gp_axislh)) > 0.2)
+{
+	key_left = abs(min(gamepad_axis_value(0, gp_axislh), 0));
+	key_right = max(gamepad_axis_value(0, gp_axislh), 0);
+	controller = 0;
+}
+
+
+if (abs(gamepad_axis_value(0, gp_axislv)) > 0.2)
+{
+	key_down = abs(min(gamepad_axis_value(1, gp_axislv), 0));
+	key_jump = max(gamepad_axis_value(1, gp_axislv), 0);
+	controller = 0;
+}
+
+if (gamepad_button_check_pressed(0, gp_face1))
+{
+	key_jump = 1;
+	controller = 0;
+}
+
 
 // Calculate movement:
 
@@ -16,37 +42,15 @@ horizontalspeed = _move * walkspeed;
 
 verticalspeed = verticalspeed + gravitation;
 
-if (place_meeting(x, y+1, object_wall)) && (key_jump)
+if (place_meeting(x, y+1, parent_collision)) && (key_jump)
 {
 	verticalspeed = -jumpspeed
 }
 
-// für Collision => Besseres Verständis durch Erklärung in YT-Tutorial Platformer Tutorial GML von YOYO GAMES Part 1/2 , ab Minute 20!
-// Horizontal collision:
-// check, ob der charakter die wand berührt. solange er das nicht tut, führe aus, dass der Charakter sich horizontal bewegt.
-if (place_meeting(x+horizontalspeed, y, object_wall)) 
-{
-	while (!place_meeting(x + sign(horizontalspeed), y, object_wall)) 
-	{
-		x = x + sign(horizontalspeed);
-	}
-	horizontalspeed = 0;
-}
 
-x = x + horizontalspeed;
+script_collision();
 
-// Vertical collision:
-// check, ob der charakter die wand berührt. solange er das nicht tut, führe aus, dass der Charakter sich vertikal bewegt.
-if (place_meeting(x, y+verticalspeed, object_wall)) 
-{
-	while (!place_meeting(x, y + sign(verticalspeed), object_wall)) 
-	{
-		y = y + sign(verticalspeed);
-	}
-	verticalspeed = 0;
-}
 
-y = y + verticalspeed;
 
 //image direction change
 if x - xprevious != 0

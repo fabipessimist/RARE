@@ -6,4 +6,10 @@ horizontalspeed = 0;
 verticalspeed =  0;
 gravitation = 0.3;
 walkspeed = 6; 
-jumpspeed = 9;
+jumpspeed = 11;
+
+controller = 0;
+
+
+//oneway platform ->
+key_down = 0;
