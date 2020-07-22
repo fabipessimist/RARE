@@ -23,6 +23,7 @@ x = x + horizontalspeed;
 
 // Vertical collision:
 // check, ob der charakter die wand berührt. solange er das nicht tut, führe aus, dass der Charakter sich vertikal bewegt.
+if collision_vert //if vertical collision is active
 if (place_meeting(x, y+verticalspeed, parent_collision)) 
 {
 	while (!place_meeting(x, y + sign(verticalspeed), parent_collision)) 

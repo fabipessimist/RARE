@@ -14,25 +14,28 @@ if (key_left) || (key_right) || (key_down) || (key_jump)
 	controller = 1;	
 }
 
-if (abs(gamepad_axis_value(1, gp_axislh)) > 0.2)
-{	
-	key_left = abs(min(gamepad_axis_value(1, gp_axislh), 0));
-	key_right = max(gamepad_axis_value(1, gp_axislh), 0);
-	controller = 1;
+if (abs(gamepad_axis_value(controller, gp_axislh)) > 0.2)
+{
+	key_left = abs(min(gamepad_axis_value(controller, gp_axislh), 0));
+	key_right = max(gamepad_axis_value(controller, gp_axislh), 0 );
 }
 
-if (abs(gamepad_axis_value(1, gp_axislv)) > 0.2)
+if (abs(gamepad_axis_value(controller, gp_axislv)) > 0.2)
 {
-	key_down = abs(min(gamepad_axis_value(1, gp_axislv), 0));
-	key_jump = max(gamepad_axis_value(1, gp_axislv), 0);
-	controller = 1;
+	key_down = abs(max(gamepad_axis_value(controller, gp_axislv), 0));
+	key_jump = gamepad_axis_value(controller, gp_axislv)*-1;
 }
 
-if (gamepad_button_check_pressed(1, gp_face1))
+if (gamepad_button_check_pressed(controller, gp_face1))
 {
-	key_jump = 1;
-	controller = 1;
+	key_jump = true;
 }
+
+#region parent
+
+event_inherited();
+
+#endregion
 
 
 // Calculate movement:
@@ -49,12 +52,4 @@ if (place_meeting(x, y+1, parent_collision)) && (key_jump)
 	verticalspeed = -jumpspeed
 }
 
-
-script_collision();
-
-//image direction change
-if x - xprevious != 0
-{
-image_xscale = sign(x - xprevious);
-}
 

@@ -1,6 +1,7 @@
 /// @description Establish Key Variables
 // why, what, how?
 // zahlen = pixel per action, e.g. jump 9 pixel
+event_inherited();
 
 horizontalspeed = 0;
 verticalspeed =  0;

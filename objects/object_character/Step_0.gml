@@ -6,32 +6,36 @@ key_right = /*keyboard_check(vk_right) or */ keyboard_check(ord("D"));
 key_jump  = /*keyboard_check_pressed(vk_up) or */ keyboard_check_pressed(vk_space) or keyboard_check_pressed(ord("W"));
 key_down = keyboard_check(ord("S"));
 
+
+
+
 if (key_left) || (key_right) || (key_down) || (key_jump)
 {
 	controller = 0;	
 }
-
-if (abs(gamepad_axis_value(0, gp_axislh)) > 0.2)
+//horizontal movement
+if (abs(gamepad_axis_value(controller, gp_axislh)) > 0.2)
 {
-	key_left = abs(min(gamepad_axis_value(0, gp_axislh), 0));
-	key_right = max(gamepad_axis_value(0, gp_axislh), 0);
-	controller = 0;
+	key_left = abs(min(gamepad_axis_value(controller, gp_axislh), 0));
+	key_right = max(gamepad_axis_value(controller, gp_axislh), 0);
+}
+//vertical movement
+if (abs(gamepad_axis_value(controller, gp_axislv)) > 0.2)
+{
+	key_down = abs(max(gamepad_axis_value(controller, gp_axislv), 0));
+	key_jump = gamepad_axis_value(controller, gp_axislv)*-1;
 }
 
-
-if (abs(gamepad_axis_value(0, gp_axislv)) > 0.2)
+if (gamepad_button_check_pressed(controller, gp_face1))
 {
-	key_down = abs(min(gamepad_axis_value(1, gp_axislv), 0));
-	key_jump = max(gamepad_axis_value(1, gp_axislv), 0);
-	controller = 0;
+	key_jump = true;
 }
 
-if (gamepad_button_check_pressed(0, gp_face1))
-{
-	key_jump = 1;
-	controller = 0;
-}
+#region parent
 
+event_inherited();
+
+#endregion
 
 // Calculate movement:
 
@@ -48,13 +52,5 @@ if (place_meeting(x, y+1, parent_collision)) && (key_jump)
 }
 
 
-script_collision();
 
-
-
-//image direction change
-if x - xprevious != 0
-{
-image_xscale = sign(x - xprevious);
-}
 
